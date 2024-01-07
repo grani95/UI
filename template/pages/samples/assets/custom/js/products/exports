@@ -1,0 +1,13 @@
+
+
+
+  //         end Export Excel file /////
+  _('pdf_export').addEventListener('click',async function(e){
+    e.preventDefault()
+    var headers = { id: "رقم الزبون", name: "إسم الزبون", tel: "رقم الهاتف", email: "البريد الإلكتروني", egincy: "الجهه المانحة", address: "العنوان" }
+    
+    var filename = prompt("الرجاء إدخال إسم الملف");
+    filename ? exportCSVFile(headers,_users , filename) // call the exportCSVFile() function to process the JSON and trigger the download
+      : null;
+    
+    })

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="../../assets/vendors/flag-icon-css/css/flag-icon.min.css">
+    <!-- <link rel="stylesheet" href="../../assets/vendors/css/vendor.bundle.base.css"> -->
+    <link rel="stylesheet" href="./assets/custom/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icons/7.0.3/css/flag-icons.min.css" integrity="sha512-bZBu2H0+FGFz/stDN/L0k8J0G8qVsAL0ht1qg5kTwtAheiXwiRKyCq1frwfbSFSJN3jooR5kauE0YjtPzhZtJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- endinject -->
+    <!-- Plugin css for inp page -->
+    <!-- End plugin css for inp page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="./assets/custom/css/style.css">
+    <link rel="stylesheet" href="../assets/custom/css/autocomplete.css">
+
+    <!-- End layout styles -->
+
+</head>
+<body>
+    <div class="container">
+<div class="row">
+
+
+    <form enctype="multipart/form-data" autocomplete="off" id ="add_product_frm">
+      
+    <div class="col-md-3 mb-3">
+        <label class="form-label"  >إسم المنتج</label>
+        <input type="text" name="Name" id="productName" class="form-control" />
+        <span class="text-danger" id="product_name_error"></span>
+        </div>
+
+
+    <div class="col-lg-3 mb-3 mt-3">
+        <div class="autocomplete" style="width:300px;">
+            <label class="form-label"  >الشركة</label>
+        <input type="text" name="comp_name" id="comp_name" class="form-control" />
+        <span class="text-danger" id="comp_name_error"></span>
+        </div>
+        </div>
+            <div class="col-lg-3 mb-3">
+                <div class="autocomplete" style="width:300px;">
+                <label class="form-label"  >نوع المنتج</label>
+            <input type="text" name="product_type" id="product_type" class="form-control" />
+            <span class="text-danger" id="product_type_error"></span>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <label class="form-label"  >ألبوم الصور</label>
+            <input type="file" name="files[]" multiple id="files" class="form-control" />
+            <span class="text-danger" id="file_error"></span>
+            </div>
+
+
+            <div class="col-md-2 mb-3">
+              <label class="form-label"  >نسبة الدعم</label>
+              <select name="support_rate" id="support_rate" class="form-control">
+                <option value=""></option>
+                <option value="1">بسيط</option>
+                <option value="2">متوسط</option>
+                <option value="3">شديد</option>
+          
+              </select>
+              <span class="text-danger" id="support_rate_error"></span>
+              </div>
+              <div class="col-md-2 mb-3">
+                <label class="form-label"  >الحالة</label><br/>
+                <input type="radio" name="state" id="active" value=1 checked />مفعل
+              
+                <input type="radio" name="state" id="not_active" value=0 />غير مفعل
+                </div>
+                <div class="col-lg-3 mb-3 mt-3">
+                <div id = "result"></div>
+                </div>
+        <div class="col-lg-3 mb-3 mt-3">
+            <input type="submit" class="btn btn-success" id="add_btn" value="إضافة" />
+        </div>
+    </form>
+</div>
+
+    
+</div>
+
+<script>
+function autocomplete(inp,elem_id, arr) {
+     /*the autocomplete function takes two arguments,
+    the text field element and an array of possible autocompleted values:*/
+    var currentFocus;
+    /*execute a function when someone writes in the text field:*/
+        var a, b, i, val = inp.value;
+        /*close any already open lists of autocompleted values*/
+        closeAllLists();
+        if (!val) { return false;}
+        currentFocus = -1;
+        /*create a DIV element that will contain the items (values):*/
+        a = document.createElement("DIV");
+        a.setAttribute("id", inp.id + "autocomplete-list");
+        a.setAttribute("class", "autocomplete-items");
+        /*append the DIV element as a child of the autocomplete container:*/
+        inp.parentNode.appendChild(a);
+        /*for each item in the array...*/
+        for (i = 0; i < arr.length; i++) {
+          /*check if the item starts with the same letters as the text field value:*/
+          if (arr[i].name.substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+            /*create a DIV element for each matching element:*/
+            b = document.createElement("DIV");
+            /*make the matching letters bold:*/
+            b.innerHTML = "<strong>" + arr[i].name.substr(0, val.length) + "</strong>";
+            b.innerHTML += arr[i].name.substr(val.length);
+            b.setAttribute("id",arr[i].id)
+            /*insert a input field that will hold the current array item's value:*/
+            b.innerHTML += "<input type='hidden' value='" + arr[i].name + "'>";
+            
+
+            /*execute a function when someone clicks on the item value (DIV element):*/
+             b.addEventListener("click", function(e) {
+                /*insert the value for the autocomplete text field:*/
+               let id = e.target.id
+               inp.innerHTML="<span>"+id+"</span>"
+
+               inp.value =this.getElementsByTagName("input")[0].value;
+                /*close the list of autocompleted values,
+                (or any other open lists of autocompleted values:*/
+                closeAllLists();
+            });
+            a.appendChild(b);
+          }
+
+        }
+    
+
+    /*execute a function presses a key on the keyboard:*/
+    inp.addEventListener("keydown", function(e) {
+        var x = document.getElementById(inp.id + "autocomplete-list");
+        if (x) x = x.getElementsByTagName("div");
+        if (e.keyCode == 40) {
+          /*If the arrow DOWN key is pressed,
+          increase the currentFocus variable:*/
+          currentFocus++;
+          /*and and make the current item more visible:*/
+          addActive(x);
+        } else if (e.keyCode == 38) { //up
+          /*If the arrow UP key is pressed,
+          decrease the currentFocus variable:*/
+          currentFocus--;
+          /*and and make the current item more visible:*/
+          addActive(x);
+        } else if (e.keyCode == 13) {
+          /*If the ENTER key is pressed, prevent the form from being submitted,*/
+          e.preventDefault();
+          if (currentFocus > -1) {
+            /*and simulate a click on the "active" item:*/
+            if (x) x[currentFocus].click();
+          }
+        }
+    
+    })
+        
+        
+    
+    function addActive(x) {
+      /*a function to classify an item as "active":*/
+      if (!x) return false;
+      /*start by removing the "active" class on all items:*/
+      removeActive(x);
+      if (currentFocus >= x.length) currentFocus = 0;
+      if (currentFocus < 0) currentFocus = (x.length - 1);
+      /*add class "autocomplete-active":*/
+      x[currentFocus].classList.add("autocomplete-active");
+    }
+    function removeActive(x) {
+      /*a function to remove the "active" class from all autocomplete items:*/
+      for (var i = 0; i < x.length; i++) {
+        x[i].classList.remove("autocomplete-active");
+      }
+    }
+    function closeAllLists(elmnt) {
+      /*close all autocomplete lists in the document,
+      except the one passed as an argument:*/
+      var x = document.getElementsByClassName("autocomplete-items");
+      for (var i = 0; i < x.length; i++) {
+        if (elmnt != x[i] && elmnt != inp) {
+          x[i].parentNode.removeChild(x[i]);
+        }
+      }
+    }
+    /*execute a function when someone clicks in the document:*/
+    document.addEventListener("click", function (e) {
+        closeAllLists(e.target);
+    });
+
+
+  }
+  
+  /*An array containing all the country names in the world:*/
+  
+  /*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
+  //autocomplete(document.getElementById("myInput"), countries);
+  
+  function show_massege(elem,msg,type){
+elem.innerHTML = ''
+let div = document.createElement('div')
+div.classList.add("alert")
+div.classList.add(type)
+div.innerText=msg
+elem.appendChild(div)
+}
+
+  async function add(url,row){
+var requestOptions = {
+  method: 'POST',
+  body: row,
+  redirect: 'follow'
+};
+
+let result = fetch(url, requestOptions)
+  .then(async response => {return await response})
+  //.then(result => console.log(result))
+  .catch(error => console.log('error', error));
+  return result;
+}
+
+
+window.onload=async function(e){
+
+async function getData(url){
+    var requestOptions = {
+  method: 'GET',
+  redirect: 'follow',
+};
+
+let result = fetch(url, requestOptions)
+  .then(response => {return response})
+//   .then(result => {return result})
+  .catch(error => console.log('error', error))
+  return result;
+}
+
+e.preventDefault();
+document.getElementById('comp_name').addEventListener('input',async function(e){
+e.preventDefault();
+let url = "https://localhost:7168/api/companies/getByName/"+e.target.value;
+let data = await getData(url)
+if(data.status == 200){
+let comp = await data.json()
+autocomplete(e.target,"comp_name",comp);
+
+}
+})
+
+
+document.getElementById('product_type').addEventListener('input',async function(e){
+e.preventDefault();
+let url = "https://localhost:7168/api/product_types/getByName/"+e.target.value;
+let data = await getData(url)
+if(data.status == 200){
+let type = await data.json()
+autocomplete(e.target,"product_type",type);
+
+}
+})
+
+document.getElementById("add_product_frm").addEventListener('submit',async function(e){
+e.preventDefault();
+ var companyID = document.getElementById("comp_name").getElementsByTagName('span')[0].innerText
+
+  var product_typeID = document.getElementById("product_type").getElementsByTagName('span')[0].innerText
+let Name = document.getElementById("productName").value
+let barcode = "ghghghg"
+let userID = 2
+let rate = document.getElementById("support_rate").value
+let state = document.getElementById("active").checked  = true ? 1 : 0;
+let row = new FormData();
+row.append("Name",Name)
+row.append("rate", rate)
+row.append("state",state)
+row.append("product_typeID",product_typeID)
+row.append("barcode",barcode)
+row.append("companyID",companyID)
+row.append("userID",userID)
+let files=[]
+files = document.getElementById("files").files
+// console.log(files.length)
+// console.log(files)
+// console.log(files[1])
+let i =0
+for( i ;i < files.length;i++){
+//  console.log(files[i])
+    row.append("logo",files[i],files[i].name)
+}
+let url = "https://localhost:7168/api/products/add"
+let result = await add(url,row)
+console.log(result)
+if(result.status == 200){
+    let result_elem = document.getElementById("result")
+    show_massege(result_elem,"لقد تمت إضافة المنتج بنجاح","alert-success")
+    
+}else{
+
+  show_massege(result_elem,"عذرا لقد حدث خطأ","alert-danger")
+
+}
+
+// console.log(result)
+ })
+
+
+}
+
+</script>
+</body>
+</html>

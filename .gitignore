@@ -1,0 +1,6 @@
+# Add any directories, files, or patterns you don't want to be tracked by version control
+node_modules/
+template/package-lock.json
+.DS_Store
+error-404.html
+error-500.html

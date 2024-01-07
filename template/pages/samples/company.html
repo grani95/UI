@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="title"></title>
+        <!-- plugins:css -->
+        <link rel="stylesheet" href="../../assets/vendors/mdi/css/materialdesignicons.min.css">
+        <link rel="stylesheet" href="../../assets/vendors/flag-icon-css/css/flag-icon.min.css">
+        <!-- <link rel="stylesheet" href="../../assets/vendors/css/vendor.bundle.base.css"> -->
+        <link rel="stylesheet" href="./assets/custom/css/style.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icons/7.0.3/css/flag-icons.min.css" integrity="sha512-bZBu2H0+FGFz/stDN/L0k8J0G8qVsAL0ht1qg5kTwtAheiXwiRKyCq1frwfbSFSJN3jooR5kauE0YjtPzhZtJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <!-- endinject -->
+        <!-- Plugin css for this page -->
+        <!-- End plugin css for this page -->
+        <!-- inject:css -->
+        <!-- endinject -->
+        <!-- Layout styles -->
+        <link rel="stylesheet" href="../../assets/css/style.css">
+        <link rel="stylesheet" href="./assets/custom/css/style.css">
+    
+        <!-- End layout styles -->
+        <link rel="shortcut icon" href="../../assets/images/favicon.png" />
+</head>
+<body dir="rtl">
+  <div class="container" style="margin-top: 50px;">
+<div class="row">
+  <!-- style="background-color: aliceblue;" -->
+<div class="col-md-3" style="margin-bottom: 30px;">
+<div id = "logo"></div>
+<div class="col-md-6 pt-5">
+  <form id="change_comp_logo_frm" enctype="multipart/form-data">
+    <input type="number" name="ID" id="companyID" class="form-control" hidden/>
+<input type="file" name="new_logo" id="ucomp_logo" class="form-control"/>
+<input type="submit" name="upload" id="upload" value = "تغير الصورة" class="btn btn-success"/>
+  </form>
+
+</div>
+</div>
+</div>
+<form id="comp_frm">
+<div class="row">
+  <div class="col-md-3 mb-3">
+  <label class="form-label"  >إسم الشركة</label>
+  <input type="text" name="companyName" id="ucompanyName" class="form-control" />
+  <span class="text-danger" id="company_name_error"></span>
+  </div>
+  <div class="col-md-2 mb-3">
+    <label class="form-label"  >نسبة الدعم</label>
+    <select name="support_rate" id="usupport_rate" class="form-control">
+      <option value=""></option>
+      <option value="1">بسيط</option>
+      <option value="2">متوسط</option>
+      <option value="3">شديد</option>
+
+    </select>
+    <span class="text-danger" id="support_rate_error"></span>
+    </div>
+    <div class="col-md-2 mb-3">
+      <label class="form-label"  >الحالة</label><br/>
+      <input type="radio" name="ustate" id="u_active" value=1 checked />مفعل
+    
+      <input type="radio" name="ustate" id="u_not_active" value=0 />غير مفعل
+      </div>
+    <div class="col-md-3 mb-3">
+      <input type="submit" class="btn btn-success" id = "company_update" value = "تعديل" name="company_update"/>
+</div>
+</div>
+</form>
+
+
+<form id="comp_country_frm">
+<div class="row">
+  <div class="col-md-3 mb-3">
+    <input type="number" name="countryID" id ="countryID" hidden/>
+
+    <label class="form-label"  >إسم البلد</label>
+    <input type="text" name="country_name" id="country_name" class="form-control" />
+    <span class="text-danger" id="code_error"></span>
+    </div>
+      <div class="col-md-3 mb-3">
+        <label class="form-label"  >رمز البلد</label>
+        <input type="text" name="code" id="code" class="form-control" disabled />
+        <span class="text-danger" id="code_error"></span>
+        </div>
+        <div class="col-md-3 mb-3">
+          <label class="form-label"  >إسم البلد بالإنجليزي</label>
+          <input type="text" name="country_eng_name" id="country_eng_name" class="form-control" disabled />
+          <span class="text-danger" id="country_eng_name_error"></span>
+          </div>
+</div>
+   <div class="row">
+     <div class="col-md-3 mb-3">
+          <label class="form-label"  >الشعار</label>
+          <span id="flag" class="flag-icon"></span>
+          </div>
+          <div class="col-md-3 mb-3">
+            <input type="submit" name="update_comp_country" id="update_comp_country" class="btn btn-success" value ="تعديل" />
+            </div>  
+   </div>
+  </form>
+
+         <div class="row">
+              <div class="col-md-3 mb-3">
+              <label class="form-label"  >إسم المستخدم</label>
+              <input type="text" name="user_fullName" id="user_fullName" class="form-control" disabled />
+              <span class="text-danger" id="user_fullName_error"></span>
+              </div>
+              <div class="col-md-3 mb-3">
+                <label class="form-label"  >البريد الإلكتروني</label>
+                <input type="text" name="user_email" id="user_email" class="form-control" disabled />
+                <span class="text-danger" id="user_email_error"></span>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                  <input type="submit" class="btn btn-info" id = "go_back" value = "رجوع" name="go_back"/>
+            </div>
+
+         </div>
+
+
+<!--   container   -->
+  </div>
+    <script>
+
+let id = window.location.search.split('=')[1]
+let current_logo='';
+let url = 'https://localhost:7168/api/companies/get/'
+let myHeaders = new Headers();
+myHeaders.append('token',localStorage.getItem('token'))
+async function test(id){
+var options = {
+  method: 'GET',
+  Headers:myHeaders,
+  // redirect: 'follow',
+  origin:"https://localhost:7168",
+  };
+    await fetch(url+id,options)
+    .then(async r=>{
+if(r.status == 200){
+let comp = await r.json();
+current_logo = comp.logo
+// console.log(comp.logo)
+document.getElementById("ucompanyName").value=comp.comp_name
+document.getElementById("usupport_rate").value=comp.support_rate
+document.getElementById("user_fullName").value=comp.user.firestName+" "+comp.user.fatherName+" "+comp.user.sureName
+document.getElementById("country_eng_name").value=comp.country.name
+
+document.getElementById("user_email").value=comp.user.email
+
+document.getElementById("country_name").value=comp.country.arabicName
+document.getElementById("code").value=comp.country.code
+document.getElementById("flag").classList.add("flag-icon-"+comp.country.code);
+
+comp.state == 1 ? document.getElementById("u_active").checked = true : document.getElementById("u_not_active").checked = true  
+document.getElementById('countryID').value = comp.country.countryID
+getLogo(comp.logo)
+}
+    });
+
+  }
+
+document.getElementById('country_name').addEventListener('change',async function(e){
+e.preventDefault();
+let old_code = document.getElementById('code').value
+// let flag = document.getElementById('flag')
+// let country_eng_name = document.getElementById('country_eng_name')
+// let code = document.getElementById('code')
+// let country_name = e.target.value
+getcountryInfo(old_code,'country_name',"flag","country_eng_name","code")
+})
+
+
+  let comp_logo = document.getElementById("logo")
+  async function getLogo(path){
+   // var x = 'C:\\Users\\grani\\Desktop\\front_end_apifitorArchive\\4ba14d31-5864-4e97-9a80-e665f2d56053_logo'
+    let url = 'https://localhost:7168/api/companies/test1/?path='+path
+    let myHeaders = new Headers();
+    myHeaders.append("token",localStorage.getItem('token'));
+var options = {
+  method: 'GET',
+  Headers:myHeaders,
+  // redirect: 'follow',
+  origin:"https://localhost:7168",
+  };
+    await fetch(url,options)
+    .then(async r=>{
+if(r.status == 200){
+let logo = await r.blob();
+URL.createObjectURL(logo)
+// console.log(logo)
+let img = document.createElement('img')
+img.src = URL.createObjectURL(logo)
+img.style.height="150px"
+// img.style.width="300px"
+comp_logo.appendChild(img)
+}
+    });
+
+  }
+window.onload=function(){
+if(id == '' || id == 'undefined'){
+alert('لقد حدث خطأ ')
+window.location = 'http://127.0.0.1/front_end_api/template/pages/samples/companies_page.html'
+
+}
+
+  test(id)
+document.getElementById('companyID').value= id
+    document.getElementById('ucomp_logo').addEventListener('change',function(e){
+e.preventDefault();
+comp_logo.innerHTML = ''
+let new_logo = e.target.files[0]
+
+/////////         display logo proccess
+URL.createObjectURL(new_logo)
+let img = document.createElement('img')
+img.src = URL.createObjectURL(new_logo)
+img.style.height="300px"
+// img.style.width="300px"
+comp_logo.appendChild(img)
+
+//////////      end display logo process
+
+})
+
+
+
+
+
+document.getElementById('change_comp_logo_frm').addEventListener('submit',async function(e){
+e.preventDefault();
+let new_logo = document.getElementById('ucomp_logo').files[0];
+var row = new FormData(this);
+row.append("old_logo",current_logo);
+let myHeaders = new Headers();
+myHeaders.append('token',localStorage.getItem('token'))
+let Options = {
+  method: 'POST',
+  headers: myHeaders,
+  body: row,
+  redirect: 'follow',
+  origin:"https://localhost:7168"
+
+};
+let url = 'https://localhost:7168/api/companies/updateLogo'
+  let r =await fetch(url, Options)
+  .then(async response =>{ return await response})
+  //.then(async result => await result)
+  .catch(error => console.log('error', error));
+  console.log(r)
+  return r
+
+})
+
+
+}
+async function checkCountry(name){
+let url = "https://localhost:7168/api/countries/getByName?name="+name
+let myHeaders = new Headers();
+myHeaders.append('token',localStorage.getItem('token'))
+var requestOptions = {
+  method: 'GET',
+  headers:myHeaders,
+  redirect: 'follow',
+  origin:"https://localhost:7168"
+};
+var result = await fetch(url, requestOptions)
+  .then(async response => await response)
+  .then(async result => {console.log(result);return await result.json()})
+  .catch(error => console.log('error', error));
+return await result;
+}
+
+async function getcountryInfo(old_county_code,country_name_id,flag_id,country_eng_name_id,code_id){
+
+let flag = document.getElementById(flag_id)
+  let name=document.getElementById(country_name_id)
+  let code = document.getElementById(code_id)
+  let ename=document.getElementById(country_eng_name_id)
+if(name !== "" || name !=="undefined"){
+    flag.classList.remove("flag-icon")
+   if(old_county_code !== "" ){
+    flag.classList.remove('flag-icon-'+old_county_code)
+   }
+   checkCountry(name.value).then(country=>{
+  //console.log(country[0])
+    name.value=country[0].arabicName;
+    code.value=country[0].code;
+    ename.value=country[0].name
+    flag.classList.add("flag-icon")
+    flag.classList.add("flag-icon-"+country[0].code)
+    old_county_code ="flag-icon-"+country[0].code
+    console.log(flag)
+   })
+  
+
+  }
+
+
+
+}
+
+
+document.getElementById("comp_frm").addEventListener("submit",async function(e){
+e.preventDefault()
+let comp_name = document.getElementById('ucompanyName').value
+let rate = document.getElementById('usupport_rate').value
+
+let state = document.getElementById('u_active').checked == true ? 1 : 0
+let url = 'https://localhost:7168/api/companies/update/'+id+'/'+rate+'/'+state+'/'+comp_name
+var requestOptions = {
+    method: 'GET',
+    redirect: 'follow',
+    origin:"https://localhost:7168"
+  
+  };
+  var result =await fetch(url, requestOptions)
+    .then(async response => {
+      if(response.status == 200){
+         if(response.text()){
+alert("لقد تم التعديل علي بيانات بنجاح")
+         }else{
+        alert("لقد حدث خطأ")
+      }
+
+      }else{
+        alert("لقد حدث خطأ")
+      }
+      
+      
+      })
+    // .then(async result => console.log(await result))
+    .catch(error => console.log('error', error));
+    return result
+
+   
+  })
+
+  document.getElementById('comp_country_frm').addEventListener('submit',async function(e){
+
+e.preventDefault()
+let code = document.getElementById('code').value
+
+var url = "https://localhost:7168/api/countries/get_id?code="+code;
+let options = {
+method: 'GET',
+// redirect: 'follow',
+origin:"https://localhost:7168",
+};
+  var result = await fetch(url,options);
+  var country =await  result.json()
+if(country > 0  && country !== 'undefined'){
+  let options = {
+method: 'PUT',
+// redirect: 'follow',
+origin:"https://localhost:7168",
+};
+  alert(document.getElementById('companyID').value)
+  var result = await fetch('https://localhost:7168/api/companies/update_country/'+document.getElementById('companyID').value+'/'+country,options);
+if(result.status == 200){
+  alert("لقد تم التعديل بنجاح")
+}else{
+alert("عذرا لقد حدث خطأ")
+}
+
+}else{
+alert('البلد غير موجود الرجاء إضافة البلد ثم إعادة المحاولة')
+
+}
+})
+
+document.getElementById('go_back').addEventListener('click',function(e){
+e.preventDefault();
+window.location = 'http://127.0.0.1/front_end_api/template/pages/samples/companies_page.html'
+
+})
+
+    </script>
+
+</body>
+</html> 

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+
+    <title>Document</title>
+</head>
+<body dir="rtl">
+    <div class="container">
+<div class="row pt-5">
+   <h1>صفحة المستخدم</h1>
+    <div class="alert alert-info"> <span id="display_username"></span>كيف الحال ؟</div>  
+    <div class="row" id ="userInfo">
+        <div class="col-lg-4">
+          <form id="personal_info_frm">
+    <div class="mb-3">
+        <label class="form-label"  >الإسم</label>
+        <input type="text" name="firest_name" id="firest_name" class="form-control" />
+        <span class="text-danger" id="fname_error"></span>
+        </div>      
+         <div class="mb-3">
+            <label class="form-label"  >إسم الأب</label>
+            <input type="text" name="father_name" id="father_name" class="form-control" />
+            <span class="text-danger" id="father_name_error"></span>
+            </div>   
+                <div class="mb-3">
+                <label class="form-label"  >اللقب</label>
+                <input type="text" name="sure_name" id="sure_name" class="form-control" />
+                <span class="text-danger" id="sure_name_error"></span>
+                </div>
+                <div class="mb-3">
+                    <input type="submit" name="submit" class="btn btn-primary" />
+                  
+                    </div>
+</form>
+  </div>
+  <div class="col-lg-4">
+
+<form id="change_pass_frm">
+    <div class="mb-3">
+        <label class="form-label"  >كلمة المرور الحالية</label>
+        <input type="password" name="pass" id="pass" class="form-control" />
+        <span class="text-danger" id="password_error"></span>
+        </div>      
+         <div class="mb-3">
+            <label class="form-label"  >تعين كلمة مرور جديدة</label>
+            <input type="password" name="new_password" id="new_password" class="form-control" />
+            <span class="text-danger" id="new_password_error"></span>
+            </div>   
+                <div class="mb-3">
+                <label class="form-label"  >تأكيد كلمة المرور</label>
+                <input type="password" name="c_pass" id="c_pass" class="form-control" />
+                <span class="text-danger" id="c_pass_error"></span>
+                </div>
+                <div class="mb-3">
+                    <input type="submit" name="submit" class="btn btn-primary" />
+                  
+                    </div>
+</form>
+
+        </div>
+
+
+        <div class="col-lg-4">
+            <form id="tel_frm">
+      <div class="mb-3">
+          <label class="form-label"  >رقم الهاتف</label>
+          <input type="number" name="tel" id="tel" class="form-control" />
+          <span class="text-danger" id="tele_error"></span>
+          </div>   
+          <div class="mb-3">
+            <input type="submit" name="submit" class="btn btn-primary" />
+          
+            </div>
+          </form>
+          </div>
+
+
+</div>
+<!-- User info  row   -->
+
+
+<div class="row">
+            <div class="col-lg-4">
+           <form>
+        <div class="mb-3">
+            <label class="form-label"  >إسم المستخدم</label>
+            <input type="text" name="username" id="username" class="form-control" disabled />
+            </div>      
+             <div class="mb-3">
+                <label class="form-label"  >عنوان البريد الإلكتتروني</label>
+                <input type="email" name="email" id="email" class="form-control" disabled />
+                <span class="text-danger" id="email_error"></span>
+                </div>   
+               
+    </form> 
+    </div>
+    <div class="col-lg-4">
+            <div class="mb-3">
+        <label class="form-label"  >الصلاحية</label>
+        <label><input type="radio"  class="option-input radio" name="roule" id="admin" value = 1  />مدير</label>
+        <label ><input type="radio"  class="option-input radio" name="roule" id="user" value = 2 checked />مستخدم</label>
+        </div>
+       <div class="mb-3">
+            <label class="form-label"  >الحالة</label>
+            <label><input type="radio"  class="option-input radio" name="state" id = "active" value=1 checked />مفعل</label>
+    
+            <label ><input type="radio"  class="option-input radio" name="state" id = "no_active"value=0 />غير مفعل</label>
+            </div>
+        
+        </div>
+
+   
+
+    <!--  contact User info row    -->
+
+
+
+</div>
+
+    </div>
+   
+    <script>
+        function _(element){
+            return document.getElementById(element);
+        }
+    async function GetUserById(id){
+        let url = 'https://localhost:7168/api/users/get/'+id
+        let myHeaders = new Headers();
+      myHeaders.append("Authorization", "Bearer "+localStorage.getItem('token'));
+      var options= {
+        method: 'Get',
+        headers:myHeaders,
+       // redirect: 'follow',
+        origin:"https://localhost:7168",
+      };
+      
+        try {
+              let res = await fetch(url,options);
+              return await res.json();
+      
+          } catch (error) {
+              console.log(error);
+          }
+          return await res;
+    }
+function fillFormElement(user){
+_('username').value=user.username
+_('pass').value=user.password
+_('firest_name').value=user.firestName
+_('father_name').value=user.fatherName
+_('sure_name').value=user.sureName
+_('tel').value=user.tel
+_('email').value=user.email
+user.roule == 1 ? _('admin').checked =true : _('user').checked =true 
+user.state == 1 ? _('active').checked =true : _('no_active').checked =true 
+
+}
+
+    window.onload= async function(){
+      let user = await GetUserById(localStorage.getItem('userId'))
+fillFormElement(user);
+    document.getElementById('display_username').innerText=localStorage.getItem('userName')
+ _('change_pass_frm').addEventListener('submit',async function(e){
+e.preventDefault();
+let new_pass = _('new_password').value;
+let old_pass = _('pass').value;
+let userId = localStorage.getItem('userId')
+let url = 'https://localhost:7168/api/userAccounts/changePassword/'+old_pass+"/"+new_pass+"/"+userId
+        let myHeaders = new Headers();
+       myHeaders.append("Authorization", "Bearer "+localStorage.getItem('token'));
+   var options= {
+        method: 'GET',
+        headers:myHeaders,
+       // redirect: 'follow',
+        origin:"https://localhost:7168",
+      };
+
+
+      ///////مزال تبي خدمة لما نحصل نت   في فك تشفير كلمة المرور من قاعدة البيانات
+        try {
+              let res = await fetch(url,options);
+
+              if(res.status == 200){
+                alert("لقد تمت العملية بنجاح")
+              }else{
+                alert("لقد حدث خطأ")
+              }      
+          } catch (error) {
+              console.log(error);
+          }
+          return await res;
+
+ })   
+    
+ _('personal_info_frm').addEventListener('submit',async function(e){
+e.preventDefault();
+let firest_name = _('firest_name').value;
+let father_name = _('father_name').value;
+let sure_name = _('sure_name').value;
+let userId = localStorage.getItem('userId')
+let url = 'https://localhost:7168/api/users/updateName/'+userId+"/"+firest_name+"/"+father_name+"/"+sure_name
+let myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer "+localStorage.getItem('token'));
+    let options= {
+        method: 'GET',
+        headers:myHeaders,
+       // redirect: 'follow',
+        origin:"https://localhost:7168",
+      };
+
+
+      ///////مزال تبي خدمة لما نحصل نت   في فك تشفير كلمة المرور من قاعدة البيانات
+        try {
+              let res = await fetch(url,options);
+
+              if(res.status == 200){
+                alert("لقد تمت العملية بنجاح")
+              }else{
+                alert("لقد حدث خطأ")
+              }      
+          } catch (error) {
+              console.log(error);
+          }
+          return await res;
+
+ })   
+
+ _('tel_frm').addEventListener('submit',async function(e){
+e.preventDefault();
+let phone = _('tel').value;
+let userId = localStorage.getItem('userId')
+let url = 'https://localhost:7168/api/users/updatePhone/'+userId+"/"+phone
+let myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer "+localStorage.getItem('token'));
+    let options= {
+        method: 'GET',
+        headers:myHeaders,
+       // redirect: 'follow',
+        origin:"https://localhost:7168",
+      };
+
+        try {
+              let res = await fetch(url,options);
+           //   let r = await res.text()
+            
+              if(res.status == 200){
+                alert("لقد تمت العملية بنجاح")
+              }else{
+                alert("لقد حدث خطأ")
+              }
+            //  return await res.json();
+      
+          } catch (error) {
+              console.log(error);
+          }
+       //   return await res;
+
+ })   
+
+    }
+
+    
+    </script> 
+</body>
+</html>

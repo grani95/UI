@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="../../assets/vendors/flag-icon-css/css/flag-icon.min.css">
+    <link rel="stylesheet" href="../../assets/vendors/css/vendor.bundle.base.css">
+    <link rel="stylesheet" href="./assets/custom/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icons/7.0.3/css/flag-icons.min.css" integrity="sha512-bZBu2H0+FGFz/stDN/L0k8J0G8qVsAL0ht1qg5kTwtAheiXwiRKyCq1frwfbSFSJN3jooR5kauE0YjtPzhZtJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+<div class="container">
+<div class="row">
+<form id="add_country"></form>
+    <div class="col-md-3">
+    <input type="text" name="country_name" id="country_name" placeholder="إسم البلد">
+    <input type="submit" class="btn btn-success" name="btn_add" id="btn_add" value="إضافة">
+</div>
+</div>
+<input type="text" class="form-control" name="name" id ="name">
+<input type="text" class="form-control" name="code" id ="code">
+<span class="flag-icon" id ="flag"></span>
+<!-- <span class="flag-icon flag-icon-fr"></span> -->
+    <!-- Rectangular switch -->
+<!-- <label class="switch">
+  <input type="checkbox">
+  <span class="slider"></span>
+</label> -->
+
+<!-- Rounded switch -->
+<label class="switch">
+    <input type="checkbox" id="state">
+    <span class="slider round"></span>
+  </label>
+
+  <button class="btn btn-success" id ="get_state">Get Data</button>
+</div>
+
+<script>
+window.onload=async function(){
+    let flag = document.getElementById("flag")
+    let name=document.getElementById("name")
+    let code = document.getElementById("code")
+document.getElementById("country_name").addEventListener("change",function(){
+async function getcountryInfo(term){
+    let myHeaders = new Headers();
+    myHeaders.append('token',localStorage.getItem('token'))
+    var url = "https://localhost:7168/api/countries/getbyname?name="+term;
+var options = {
+  method: 'GET',
+  headers:myHeaders,
+ // redirect: 'follow',
+  origin:"https://localhost:7168",
+};
+    var result = await fetch(url,options);
+    var country =await  result.json()
+    console.log(country)
+    name.value=country[0].name;
+    console.log(name)
+    flag.classList.add("flag-icon-"+country[0].code)
+    code.value=country[0].code
+    return country
+}
+    let term = this.value
+if(term !== "" || term !=="undefined"){
+    let term = document.getElementById("country_name").value;
+     getcountryInfo(term)
+}
+})
+document.getElementById("get_state").addEventListener("click",function(e){
+
+e.preventDefault();
+var s = document.getElementById("state")
+console.log(state.getAttribute("checked"))
+
+})}
+</script>
+</body>
+</html>

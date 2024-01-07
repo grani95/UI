@@ -1,0 +1,11 @@
+{
+  "name": "gazza",
+  "version": "1.0.0",
+  "description": "<a href=\"http://www.bootstrapdash.com/demo/connect-plus-free/jquery/template/index.html\" target=\"_blank\"><img src=\"screenshot.jpg\"></a>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
